@@ -1,0 +1,35 @@
+{
+	"name": "laxity7/yii2-event-service",
+	"description": "Yii2 events provide a simple observer pattern implementation, allowing you to subscribe and listen for various events that occur within your application.",
+	"license": "MIT",
+	"homepage": "https://github.com/laxity7/yii2-event-service",
+    "minimum-stability": "stable",
+	"keywords": [
+		"yii2",
+		"events",
+		"yii2-event-service"
+	],
+	"type": "library",
+	"authors": [
+		{
+			"name": "Vlad Varlamov",
+            "email": "vlad@varlamov.dev",
+            "homepage": "https://varlamov.dev/"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/laxity7/yii2-event-service/issues",
+		"source": "https://github.com/laxity7/yii2-event-service"
+	},
+	"autoload": {
+		"psr-4": {
+            "Laxity7\\Yii2\\Components\\": "src"
+		}
+	},
+	"require": {
+        "php": ">=7.4|>=8.0"
+	},
+    "config": {
+        "sort-packages": true
+    }
+}

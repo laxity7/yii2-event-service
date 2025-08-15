@@ -72,6 +72,8 @@ class EventServiceProvider extends BaseObject
     {
         $listeners = $this->listen[get_class($event)] ?? [];
         if (empty($listeners)) {
+            $this->log('No listeners for event: ' . get_class($event));
+
             return;
         }
 
@@ -88,7 +90,7 @@ class EventServiceProvider extends BaseObject
      */
     private function fire(object $event, $listener): void
     {
-        $this->log($event, $listener);
+        $this->logEvent($event, $listener);
 
         if (is_callable($listener)) {
             call_user_func($listener, $event);
@@ -96,14 +98,12 @@ class EventServiceProvider extends BaseObject
             return;
         }
 
-        $listener = Yii::createObject($listener);
-        if (method_exists($listener, 'handle')) {
-            $listener->handle($event);
-
-            return;
+        if (!method_exists($listener, 'handle')) {
+            throw new \InvalidArgumentException('Listener must be a class with handle method or a closure');
         }
 
-        throw new \InvalidArgumentException('Listener must be a class with handle method or a closure');
+        $listener = Yii::createObject($listener);
+        $listener->handle($event);
     }
 
     /**
@@ -112,12 +112,24 @@ class EventServiceProvider extends BaseObject
      * @param object $event
      * @param \Closure|object $listener
      */
-    private function log(object $event, $listener): void
+    private function logEvent(object $event, $listener): void
     {
         if (!$this->logEvents) {
             return;
         }
         $listener = is_callable($listener) ? 'closure' : $listener;
-        Yii::info('Event: ' . get_class($event) . PHP_EOL . 'Trigger: ' . $listener);
+        $this->log('Event: ' . get_class($event) . PHP_EOL . 'Trigger: ' . $listener);
+    }
+
+    /**
+     * Logs a message.
+     *
+     * @param string $message
+     */
+    private function log(string $message): void
+    {
+        if ($this->logEvents) {
+            Yii::info($message);
+        }
     }
 }
